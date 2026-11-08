@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 5 Grammar - التفاعلي</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#1e1b4b',
+                        purple: '#581c87',
+                        turquoise: '#0f766e',
+                        gold: '#b45309',
+                        lightbg: '#f8fafc'
+                    },
+                    fontFamily: {
+                        arabic: ['Cairo', 'sans-serif'],
+                        english: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* الأساسيات والتنسيقات المضمونة */
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background-color: #f1f5f9; 
+            color: #334155; 
+            margin: 0; 
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        .eng-text { font-family: 'Inter', sans-serif; direction: ltr; display: inline-block; }
+        .eng-block { font-family: 'Inter', sans-serif; direction: ltr; text-align: left; }
+        
+        /* الحركات (Animations) */
+        .fade-in { animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
+        /* شريط التمرير (Scrollbar) */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* إدارة الشاشات */
+        .screen { display: none; }
+        .screen.active { display: flex; flex-direction: column; }
+        
+        /* وضع الشهادة */
+        .cert-mode .hide-in-cert { display: none !important; }
+        .cert-mode { background: #ffffff !important; }
+        
+        /* ألوان الأزرار في الاختبار */
+        .btn-option { transition: all 0.2s ease; }
+        .btn-option:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .btn-option:disabled { cursor: not-allowed; }
+        .correct-btn { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
+        .wrong-btn { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- الشريط العلوي (Header) -->
+    <header class="bg-navy text-white p-4 shadow-md sticky top-0 z-50 hide-in-cert">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div>
+                <h1 class="text-sm md:text-lg font-bold text-yellow-400 eng-text tracking-wide">Unit 5: Did You Hurt Yourself?</h1>
+                <h2 class="text-xs md:text-sm text-gray-300 mt-1">Grammar Lesson & Evaluation</h2>
+            </div>
+            <div class="text-left">
+                <p class="text-teal-400 font-bold eng-text text-sm md:text-base">Teacher: Mohammad AlFaifi</p>
+                <p class="mt-1 text-[10px] md:text-xs text-gray-300 tracking-wider">افهم القاعدة • تدرّب • اختبر نفسك</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- أزرار التحكم العلوية -->
+    <div class="max-w-6xl mx-auto w-full px-4 pt-4 flex justify-between items-center hide-in-cert">
+        <button id="btn-home" class="text-navy hover:text-purple font-bold flex items-center gap-2 transition-colors px-4 py-2 rounded-lg bg-white shadow-sm border border-gray-200 hover:bg-gray-50">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            الرئيسية
+        </button>
+        <button id="btn-sound" class="text-gray-600 hover:text-navy font-bold transition-colors px-4 py-2 rounded-lg bg-white shadow-sm border border-gray-200 hover:bg-gray-50 flex items-center gap-2">
+            <span id="sound-status">🔊 الصوت مفعّل</span>
+        </button>
+    </div>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-grow max-w-6xl mx-auto w-full p-4 flex flex-col justify-center my-4">
+        
+        <!-- الشاشة 1: البداية -->
+        <div id="screen-home" class="screen active fade-in bg-white rounded-2xl shadow-xl p-8 md:p-14 text-center border-t-4 border-purple relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-purple rounded-full opacity-5 pointer-events-none"></div>
+            <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-turquoise rounded-full opacity-5 pointer-events-none"></div>
+            
+            <div class="mb-10 relative z-10">
+                <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-indigo-50 text-purple mb-6 shadow-inner">
+                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-navy mb-4 tracking-tight">تطبيق القواعد التفاعلي</h2>
+                <p class="text-gray-600 text-lg md:text-xl max-w-lg mx-auto">طريقك الأسهل لفهم قواعد الوحدة الخامسة، التدرب عليها، واختبار مستواك للحصول على شهادة الإنجاز.</p>
+            </div>
+            
+            <div class="max-w-md mx-auto w-full relative z-10 bg-gray-50 p-6 md:p-8 rounded-2xl border border-gray-100 shadow-sm">
+                <label for="studentName" class="block text-right text-base font-bold text-navy mb-3">أدخل اسمك الثلاثي للبدء:</label>
+                <input type="text" id="studentName" placeholder="مثال: أحمد خالد محمد..." class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:outline-none focus:border-purple focus:ring-2 focus:ring-purple-200 mb-2 transition-all text-right text-lg font-bold shadow-inner">
+                <p id="nameError" class="text-red-500 text-sm mb-4 hidden font-bold text-right transition-all">⚠️ يرجى كتابة اسمك بشكل صحيح (حرفين على الأقل).</p>
+                
+                <button id="btn-start" class="w-full bg-purple hover:bg-navy text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all transform hover:-translate-y-1 text-xl flex justify-center items-center gap-2 mt-4">
+                    ابدأ التعلّم الآن
+                    <svg class="w-6 h-6 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- الشاشة 2: القائمة الرئيسية -->
+        <div id="screen-menu" class="screen fade-in w-full">
+            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-10 border-t-4 border-turquoise">
+                <h2 class="text-2xl md:text-3xl font-extrabold text-navy mb-2 text-center">محتويات الدرس</h2>
+                <p class="text-center text-gray-500 font-semibold mb-8 border-b border-gray-100 pb-6">اختر القاعدة التي تريد مراجعتها أولاً، ثم انتقل للتدريب.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                    <button id="btn-lesson-0" class="bg-white hover:bg-blue-50 p-6 rounded-2xl border-2 border-gray-100 hover:border-blue-300 transition-all text-right group shadow-sm hover:shadow-md relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-2 h-full bg-blue-400"></div>
+                        <h3 class="text-xl font-black text-navy mb-2 eng-text group-hover:text-blue-700 transition">Reflexive Pronouns</h3>
+                        <p class="text-base text-gray-600 font-bold">الضمائر الانعكاسية</p>
+                    </button>
+                    <button id="btn-lesson-1" class="bg-white hover:bg-purple-50 p-6 rounded-2xl border-2 border-gray-100 hover:border-purple-300 transition-all text-right group shadow-sm hover:shadow-md relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-2 h-full bg-purple"></div>
+                        <h3 class="text-xl font-black text-navy mb-2 eng-text group-hover:text-purple-700 transition">Because vs So</h3>
+                        <p class="text-base text-gray-600 font-bold">السبب والنتيجة</p>
+                    </button>
+                    <button id="btn-lesson-2" class="bg-white hover:bg-teal-50 p-6 rounded-2xl border-2 border-gray-100 hover:border-teal-300 transition-all text-right group shadow-sm hover:shadow-md relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-2 h-full bg-teal-500"></div>
+                        <h3 class="text-xl font-black text-navy mb-2 eng-text group-hover:text-teal-700 transition">So and Neither</h3>
+                        <p class="text-base text-gray-600 font-bold">الموافقة (وأنا أيضاً / ولا أنا)</p>
+                    </button>
+                </div>
+                
+                <div class="flex flex-col md:flex-row justify-center gap-4 bg-gray-50 p-6 rounded-2xl border border-gray-200">
+                    <button id="btn-prac" class="bg-turquoise hover:bg-teal-800 text-white font-bold py-4 px-8 rounded-xl shadow-md transition-all text-lg flex-1 flex justify-center items-center gap-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                        التدريب التفاعلي
+                    </button>
+                    <button id="btn-eval" class="bg-navy hover:bg-blue-900 text-white font-bold py-4 px-8 rounded-xl shadow-md transition-all text-lg flex-1 flex justify-center items-center gap-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        التقييم النهائي
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- الشاشة 3: شرح القاعدة -->
+        <div id="screen-lesson" class="screen fade-in bg-white rounded-2xl shadow-xl w-full border-t-4 border-purple overflow-hidden">
+            <div class="p-4 bg-gray-50 border-b border-gray-200">
+                <button id="btn-menu-back" class="text-navy hover:text-purple flex items-center gap-2 font-bold bg-white px-4 py-2 rounded-lg border border-gray-300 shadow-sm transition-all hover:bg-gray-100 w-fit">
+                    <svg class="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    العودة للقائمة
+                </button>
+            </div>
+            <div id="lesson-container" class="p-6 md:p-10 w-full">
+                <!-- المحتوى يُحقن هنا برمجياً -->
+            </div>
+        </div>
+
+        <!-- الشاشة 4: الاختبار والتدريب -->
+        <div id="screen-quiz" class="screen fade-in w-full max-w-4xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-10 border-t-4 border-turquoise relative">
+                
+                <!-- الرأس ومعلومات التقدم -->
+                <div class="flex justify-between items-end mb-6 border-b border-gray-100 pb-4">
+                    <div>
+                        <h2 id="quiz-title" class="text-2xl font-extrabold text-navy">التدريب</h2>
+                        <p id="quiz-instruction" class="text-sm text-gray-500 font-bold mt-1">اختر الإجابة الصحيحة:</p>
+                    </div>
+                    <div class="bg-teal-50 text-teal-800 font-black px-4 py-2 rounded-lg border border-teal-200 shadow-sm text-lg tracking-widest">
+                        <span id="quiz-progress">1/10</span>
+                    </div>
+                </div>
+                
+                <!-- شريط التقدم -->
+                <div class="w-full bg-gray-100 rounded-full h-3 mb-8 overflow-hidden shadow-inner border border-gray-200">
+                    <div id="quiz-bar" class="bg-gradient-to-r from-turquoise to-teal-400 h-full transition-all duration-500 rounded-full" style="width: 0%"></div>
+                </div>
+
+                <!-- السؤال -->
+                <div class="mb-8 min-h-[100px] flex items-center bg-gray-50 p-6 rounded-2xl border-2 border-gray-100">
+                    <h3 id="quiz-question" class="text-2xl md:text-3xl font-extrabold text-navy eng-block leading-tight w-full"></h3>
+                </div>
+                
+                <!-- الخيارات -->
+                <div id="quiz-options" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <!-- تُحقن الأزرار هنا برمجياً -->
+                </div>
+
+                <!-- التغذية الراجعة (تظهر بعد الإجابة) -->
+                <div id="quiz-feedback" class="hidden rounded-2xl p-6 mb-6 border-2 shadow-sm transform transition-all">
+                    <h4 id="feedback-title" class="font-bold text-xl mb-2 flex items-center gap-2"></h4>
+                    <p id="feedback-text" class="text-gray-800 font-bold text-lg leading-relaxed"></p>
+                </div>
+
+                <!-- أزرار التنقل -->
+                <div class="flex justify-end gap-3 border-t border-gray-100 pt-6 mt-2">
+                    <button id="btn-next" class="hidden bg-navy hover:bg-blue-900 text-white font-bold py-4 px-8 rounded-xl shadow-lg transition-all text-lg flex items-center gap-2">
+                        السؤال التالي
+                        <svg class="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+                    <button id="btn-to-eval" class="hidden bg-purple hover:bg-indigo-900 text-white font-bold py-4 px-8 rounded-xl shadow-lg transition-all text-lg flex items-center gap-2">
+                        الانتقال للتقييم النهائي
+                        <svg class="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
+                    </button>
+                     <button id="btn-finish" class="hidden bg-gold hover:bg-yellow-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg transition-all text-lg flex items-center gap-2">
+                        إنهاء وعرض النتيجة
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- الشاشة 5: النتيجة النهائية -->
+        <div id="screen-result" class="screen fade-in w-full max-w-4xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 text-center border-t-8 border-gold mb-8 relative overflow-hidden">
+                
+                <h2 class="text-4xl font-extrabold text-navy mb-2">النتيجة النهائية</h2>
+                <p class="text-gray-500 font-bold mb-6">لقد أتممت الاختبار بنجاح يا</p>
+                <p id="result-name" class="text-3xl text-purple font-black mb-10 bg-purple-50 inline-block px-8 py-3 rounded-full border border-purple-100"></p>
+                
+                <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 mb-10 bg-gray-50 py-8 px-4 rounded-3xl border-2 border-gray-100 shadow-inner">
+                    <div class="text-center">
+                        <p class="text-base text-gray-500 font-bold mb-2">الدرجة</p>
+                        <div class="text-5xl font-black text-navy"><span id="result-score">0</span><span class="text-3xl text-gray-400 mx-1">/</span><span id="result-total" class="text-4xl text-gray-500">0</span></div>
+                    </div>
+                    <div class="hidden md:block w-px h-24 bg-gray-300"></div>
+                    <div class="text-center">
+                        <p class="text-base text-gray-500 font-bold mb-2">النسبة المئوية</p>
+                        <div class="text-6xl font-black text-turquoise" id="result-percent">0%</div>
+                    </div>
+                </div>
+                
+                <p id="result-message" class="text-2xl font-bold mb-10 p-5 rounded-2xl border-2 shadow-sm"></p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button id="btn-retry" class="bg-white hover:bg-gray-50 text-navy border-2 border-navy font-bold py-4 px-6 rounded-xl transition-all shadow-sm">
+                        إعادة المحاولة
+                    </button>
+                    <button id="btn-review" class="bg-turquoise hover:bg-teal-800 text-white font-bold py-4 px-6 rounded-xl shadow-md transition-all">
+                        مراجعة الأخطاء
+                    </button>
+                    <button id="btn-cert" class="bg-purple hover:bg-indigo-900 text-white font-bold py-4 px-6 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 transform hover:scale-105">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        الشهادة
+                    </button>
+                </div>
+            </div>
+
+            <!-- قسم مراجعة الأخطاء -->
+            <div id="review-section" class="hidden fade-in bg-white rounded-2xl shadow-xl p-8 border-t-4 border-navy mb-10">
+                <h3 class="text-2xl font-black text-navy mb-6 border-b-2 border-gray-100 pb-4">مراجعة الأسئلة وتصحيحها</h3>
+                <div id="review-list" class="space-y-6"></div>
+            </div>
+        </div>
+
+        <!-- الشاشة 6: الشهادة -->
+        <div id="screen-certificate" class="screen items-center justify-center w-full">
+            <!-- تعليمات الحفظ -->
+            <div class="mb-6 bg-yellow-50 text-yellow-900 p-6 rounded-2xl border-2 border-yellow-300 max-w-4xl w-full hide-in-cert text-center shadow-md">
+                <p class="font-black text-xl mb-3 text-yellow-800">تعليمات حفظ الشهادة:</p>
+                <p class="font-bold mb-6 text-lg">لعرض الشهادة كاملة وحفظها، اضغط على الزر أدناه لإخفاء الأزرار، ثم قم بتدوير الهاتف (بالعرض) والتقط <span class="bg-yellow-200 px-2 rounded">لقطة شاشة (Screenshot)</span> من جهازك.</p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <button id="btn-hide-cert" class="bg-yellow-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-yellow-700 shadow-md transition-all text-lg flex items-center justify-center gap-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                        ملائمة الشاشة (للالتقاط)
+                    </button>
+                    <button id="btn-back-cert" class="bg-white text-navy border-2 border-navy px-8 py-4 rounded-xl font-bold hover:bg-gray-50 transition-all text-lg">العودة للنتيجة</button>
+                </div>
+            </div>
+
+            <!-- زر الخروج من وضع الشهادة (يظهر فقط عند التفعيل) -->
+            <button id="btn-exit-cert" class="hidden fixed top-6 right-6 z-[100] bg-red-600 text-white px-6 py-3 rounded-xl shadow-2xl font-bold border-2 border-white hover:bg-red-700 transition-all">
+                إنهاء وضع الالتقاط والعودة
+            </button>
+
+            <!-- حاوية الشهادة -->
+            <div class="w-full max-w-[1000px] bg-white p-2 md:p-4 shadow-2xl border-4 border-gray-200" style="aspect-ratio: 1.414/1;">
+                <div class="w-full h-full border-[10px] border-double border-navy p-6 md:p-12 relative flex flex-col justify-between overflow-hidden" style="background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);">
+                    
+                    <!-- الزخارف -->
+                    <div class="absolute top-2 left-2 w-10 h-10 border-t-4 border-l-4 border-gold"></div>
+                    <div class="absolute top-2 right-2 w-10 h-10 border-t-4 border-r-4 border-gold"></div>
+                    <div class="absolute bottom-2 left-2 w-10 h-10 border-b-4 border-l-4 border-gold"></div>
+                    <div class="absolute bottom-2 right-2 w-10 h-10 border-b-4 border-r-4 border-gold"></div>
+
+                    <!-- العنوان -->
+                    <div class="text-center mt-4">
+                        <h1 class="text-5xl md:text-7xl font-black text-navy tracking-widest eng-text uppercase mb-2">Certificate</h1>
+                        <h2 class="text-2xl md:text-3xl font-bold text-gold tracking-widest">OF COMPLETION</h2>
+                    </div>
+
+                    <!-- المحتوى -->
+                    <div class="text-center z-10 my-4 md:my-8 flex-grow flex flex-col justify-center">
+                        <p class="text-lg md:text-xl text-gray-500 font-bold mb-6 uppercase tracking-wider eng-text">This certificate is proudly presented to</p>
+                        <p id="cert-name" class="text-4xl md:text-6xl font-black text-purple mb-8 pb-2 border-b-4 border-gray-300 inline-block px-10 max-w-full overflow-hidden text-ellipsis whitespace-nowrap"></p>
+                        <p class="text-lg md:text-xl text-gray-700 font-bold mb-4 eng-text">For successfully completing the Grammar Evaluation with a score of <span id="cert-percent" class="text-turquoise font-black text-2xl md:text-3xl mx-1"></span></p>
+                        <div class="flex justify-center mt-2">
+                             <p class="text-xl md:text-2xl font-black text-navy eng-text bg-gray-100 inline-block px-8 py-3 rounded-xl border-2 border-gray-200 shadow-sm">Unit 5: Did You Hurt Yourself?</p>
+                        </div>
+                    </div>
+
+                    <!-- التوقيع والتاريخ -->
+                    <div class="flex justify-between items-end border-t-2 border-gray-300 pt-6 px-4 md:px-12 relative">
+                        
+                        <div class="absolute left-1/2 bottom-0 transform -translate-x-1/2 opacity-5 pointer-events-none pb-4">
+                            <svg width="150" height="150" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="#1e1b4b" stroke-width="4"/><path d="M30 50 l15 15 l30 -35" fill="none" stroke="#1e1b4b" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+
+                        <div class="text-center z-10 w-32 md:w-48">
+                            <p class="text-sm font-bold text-gray-500 mb-2 uppercase eng-text tracking-widest">Date</p>
+                            <p id="cert-date" class="font-extrabold text-navy eng-text text-lg md:text-xl border-b-2 border-navy pb-1"></p>
+                        </div>
+                        <div class="text-center z-10 w-32 md:w-48">
+                            <p class="text-sm font-bold text-gray-500 mb-2 uppercase eng-text tracking-widest">Teacher</p>
+                            <p class="font-extrabold text-navy eng-text text-xl md:text-2xl border-b-2 border-navy pb-1" style="font-family: 'Times New Roman', serif; font-style: italic;">M. AlFaifi</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-navy text-gray-400 py-4 text-center text-sm font-bold mt-auto hide-in-cert border-t border-gray-800">
+        <p>تصميم تعليمي تفاعلي - القواعد الإنجليزية</p>
+    </footer>
+
+    <!-- سكربت التطبيق: تم تصميمه ليكون مقاوماً للحظر وآمناً تماماً -->
+    <script>
+        // ==========================================
+        // 1. البيانات (المحتوى والأسئلة)
+        // ==========================================
+        const lessonsData = [
+            {
+                title: "Reflexive Pronouns",
+                arTitle: "الضمائر الانعكاسية",
+                content: `
+                    <div class="space-y-6 text-right">
+                        <div class="bg-blue-50 p-6 rounded-2xl border-r-4 border-blue-600 shadow-sm">
+                            <h4 class="font-black text-xl mb-2 text-blue-900">متى نستخدمها؟</h4>
+                            <p class="font-bold text-lg text-gray-800">نستخدم الضمير الانعكاسي عندما يكون <span class="text-purple bg-purple-100 px-1 rounded">الفاعل (Subject)</span> و <span class="text-teal-700 bg-teal-100 px-1 rounded">المفعول به (Object)</span> هما <strong>نفس الشخص</strong>.</p>
+                            <p class="mt-3 text-gray-600 font-bold text-sm bg-white p-3 rounded-lg border border-blue-100">💡 مثال للتوضيح: عندما تنظر في المرآة، أنت (الفاعل) تنظر إلى نفسك (المفعول به).</p>
+                        </div>
+
+                        <div>
+                            <h4 class="font-black text-xl mb-4 text-navy border-b-2 inline-block pb-2 border-gray-200">الضمائر هي:</h4>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 eng-text text-center w-full text-lg">
+                                <div class="bg-white p-4 border-2 border-gray-100 rounded-xl shadow-sm hover:border-blue-300 transition-colors"><span class="text-gray-400 mr-2">I ➔</span> <strong class="text-navy">myself</strong></div>
+                                <div class="bg-white p-4 border-2 border-gray-100 rounded-xl shadow-sm hover:border-blue-300 transition-colors"><span class="text-gray-400 mr-2">you ➔</span> <strong class="text-navy">yourself</strong></div>
+                                <div class="bg-white p-4 border-2 border-gray-100 rounded-xl shadow-sm hover:border-blue-300 transition-colors"><span class="text-gray-400 mr-2">he ➔</span> <strong class="text-navy">himself</strong></div>
+                                <div class="bg-white p-4 border-2 border-gray-100 rounded-xl shadow-sm hover:border-blue-300 transition-colors"><span class="text-gray-400 mr-2">she ➔</span> <strong class="text-navy">herself</strong></div>
+                                <div class="bg-white p-4 border-2 border-gray-100 rounded-xl shadow-sm hover:border-blue-300 transition-colors"><span class="text-gray-400 mr-2">it ➔</span> <strong class="text-navy">itself</strong></div>
+                                <div class="bg-white p-4 border-2 border-gray-100 rounded-xl shadow-sm hover:border-blue-300 transition-colors"><span class="text-gray-400 mr-2">we ➔</span> <strong class="text-navy">ourselves</strong></div>
+                                <div class="bg-white p-4 border-2 border-gray-100 rounded-xl shadow-sm hover:border-blue-300 transition-colors flex flex-col"><span class="text-gray-400 mr-2">you ➔</span> <strong class="text-navy">yourselves</strong><span class="text-xs text-gray-400 rtl-text mt-1">(للجمع)</span></div>
+                                <div class="bg-white p-4 border-2 border-gray-100 rounded-xl shadow-sm hover:border-blue-300 transition-colors"><span class="text-gray-400 mr-2">they ➔</span> <strong class="text-navy">themselves</strong></div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200 mt-6">
+                            <h4 class="font-black text-xl mb-5 text-navy">أمثلة منوعة:</h4>
+                            <div class="space-y-4">
+                                <div class="bg-white p-5 rounded-xl eng-block border-l-4 border-purple shadow-sm">
+                                    <p class="font-extrabold text-xl text-gray-800"><span class="text-purple">He</span> likes to look at <span class="text-teal-600 bg-teal-50 px-1 rounded">himself</span> in the mirror.</p>
+                                    <p class="font-bold text-gray-500 mt-2 text-sm" dir="rtl">هو يحب أن ينظر إلى نفسه في المرآة.</p>
+                                </div>
+                                <div class="bg-white p-5 rounded-xl eng-block border-l-4 border-purple shadow-sm">
+                                    <p class="font-extrabold text-xl text-gray-800"><span class="text-purple">I</span> fixed the hair dryer <span class="text-teal-600 bg-teal-50 px-1 rounded">myself</span>.</p>
+                                    <p class="font-bold text-gray-500 mt-2 text-sm" dir="rtl">أنا أصلحت مجفف الشعر بنفسي (بدون مساعدة أحد).</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Because versus So",
+                arTitle: "Because (لأن) مقابل So (لذلك)",
+                content: `
+                    <div class="space-y-6 text-right">
+                        <div class="bg-purple-50 p-6 rounded-2xl border-r-4 border-purple shadow-sm">
+                            <h4 class="font-black text-xl mb-4 text-purple">ما الفرق بينهما؟</h4>
+                            <ul class="list-none space-y-4 font-bold text-lg text-gray-800">
+                                <li class="bg-white p-3 rounded-lg border border-purple-100 flex items-center gap-3">
+                                    <span class="eng-text text-purple font-black text-2xl bg-purple-50 px-3 py-1 rounded">because</span>
+                                    <span>معناها (لأن). نستخدمها لذكر <strong>السبب</strong> (لماذا حدث الشيء؟).</span>
+                                </li>
+                                <li class="bg-white p-3 rounded-lg border border-teal-100 flex items-center gap-3">
+                                    <span class="eng-text text-teal-700 font-black text-2xl bg-teal-50 px-3 py-1 rounded">so</span>
+                                    <span>معناها (لذلك). نستخدمها لذكر <strong>النتيجة</strong> (ماذا حدث بعد ذلك؟).</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                            <div class="bg-white p-6 rounded-2xl border-2 border-purple-100 shadow-sm">
+                                <h4 class="font-black text-xl mb-4 text-purple bg-purple-50 inline-block px-3 py-1 rounded">أمثلة على Because (السبب):</h4>
+                                <div class="eng-block">
+                                    <p class="font-extrabold text-lg text-gray-800 mb-3 leading-relaxed">Most accidents happen <span class="bg-purple text-white px-2 py-1 rounded">because</span> people don't pay attention.</p>
+                                    <p class="font-bold text-gray-600 text-sm p-3 bg-gray-50 rounded-lg" dir="rtl">معظم الحوادث تقع <strong>لأن</strong> الناس لا تنتبه. <br><span class="text-purple font-black block mt-1">(عدم الانتباه هو السبب)</span></p>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-2xl border-2 border-teal-100 shadow-sm">
+                                <h4 class="font-black text-xl mb-4 text-teal-700 bg-teal-50 inline-block px-3 py-1 rounded">أمثلة على So (النتيجة):</h4>
+                                <div class="eng-block">
+                                    <p class="font-extrabold text-lg text-gray-800 mb-3 leading-relaxed">He didn't turn off the electricity, <span class="bg-teal-600 text-white px-2 py-1 rounded">so</span> he got a shock.</p>
+                                    <p class="font-bold text-gray-600 text-sm p-3 bg-gray-50 rounded-lg" dir="rtl">هو لم يطفئ الكهرباء، <strong>لذلك</strong> أصيب بصدمة. <br><span class="text-teal-700 font-black block mt-1">(الإصابة بالصدمة هي النتيجة)</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "So and Neither",
+                arTitle: "الموافقة باستخدام So و Neither",
+                content: `
+                     <div class="space-y-6 text-right">
+                        <div class="bg-teal-50 p-6 rounded-2xl border-r-4 border-teal-600 shadow-sm">
+                            <h4 class="font-black text-xl mb-3 text-teal-900">متى نستخدمها؟</h4>
+                            <p class="font-bold text-lg text-gray-800 bg-white p-3 rounded-lg border border-teal-100">نستخدمهما لإظهار <strong>الموافقة</strong> مع كلام شخص آخر (بمعنى: وأنا أيضاً / ولا أنا).</p>
+                            <ul class="list-none mt-4 space-y-3 font-bold text-gray-800 text-lg">
+                                <li class="flex items-center gap-3"><span class="eng-text text-white bg-teal-600 px-3 py-1 rounded font-black">So</span> للموافقة على جملة <strong>مُثبتة</strong> (ليس فيها نفي).</li>
+                                <li class="flex items-center gap-3"><span class="eng-text text-white bg-red-600 px-3 py-1 rounded font-black">Neither</span> للموافقة على جملة <strong>منفية</strong> (فيها not, don't, never).</li>
+                            </ul>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                            <div class="border-2 border-teal-200 bg-white rounded-2xl p-6 shadow-sm relative overflow-hidden">
+                                <div class="absolute top-0 right-0 w-full h-1 bg-teal-500"></div>
+                                <h5 class="font-black text-center text-xl mb-5 text-teal-700 bg-teal-50 py-2 rounded-lg">موافقة على المُثبت (So)</h5>
+                                <div class="space-y-4 eng-block text-lg">
+                                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                                        <p class="font-bold text-gray-600 text-sm mb-1">A: I <span class="text-teal-600 font-black">am</span> a careful driver.</p>
+                                        <p class="font-extrabold text-navy text-xl">B: <span class="text-teal-600">So</span> am I.</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                                        <p class="font-bold text-gray-600 text-sm mb-1">A: I hurt myself all the time.</p>
+                                        <p class="font-extrabold text-navy text-xl">B: <span class="text-teal-600">So</span> do I.</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                                        <p class="font-bold text-gray-600 text-sm mb-1">A: I <span class="text-teal-600 font-black">have</span> been in an accident.</p>
+                                        <p class="font-extrabold text-navy text-xl">B: <span class="text-teal-600">So</span> have I.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="border-2 border-red-200 bg-white rounded-2xl p-6 shadow-sm relative overflow-hidden">
+                                <div class="absolute top-0 right-0 w-full h-1 bg-red-500"></div>
+                                <h5 class="font-black text-center text-xl mb-5 text-red-600 bg-red-50 py-2 rounded-lg">موافقة على المنفي (Neither)</h5>
+                                <div class="space-y-4 eng-block text-lg">
+                                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                                        <p class="font-bold text-gray-600 text-sm mb-1">A: I'<span class="text-red-600 font-black">m not</span> an aggressive driver.</p>
+                                        <p class="font-extrabold text-navy text-xl">B: <span class="text-red-600">Neither</span> am I.</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                                        <p class="font-bold text-gray-600 text-sm mb-1">A: I <span class="text-red-600 font-black">didn't</span> slip.</p>
+                                        <p class="font-extrabold text-navy text-xl">B: <span class="text-red-600">Neither</span> did I.</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                                        <p class="font-bold text-gray-600 text-sm mb-1">A: I've <span class="text-red-600 font-black">never</span> broken an arm.</p>
+                                        <p class="font-extrabold text-navy text-xl">B: <span class="text-red-600">Neither</span> have I.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        const quizData = {
+            practice: [
+                { q: "Sarah cut ____ while she was peeling potatoes.", opts: ["herself", "himself", "itself", "myself"], ans: 0, exp: "الفاعل Sarah (مؤنث مفرد) لذا نستخدم herself." },
+                { q: "I burned ____ when I was making fries.", opts: ["yourself", "myself", "himself", "ourselves"], ans: 1, exp: "الفاعل I (أنا) لذا نستخدم myself." },
+                { q: "My grandfather slipped on a rug and hurt ____.", opts: ["herself", "myself", "himself", "itself"], ans: 2, exp: "الفاعل My grandfather (مذكر مفرد) لذا نستخدم himself." },
+                { q: "She went to the doctor ____ she was sick.", opts: ["so", "because", "neither", "too"], ans: 1, exp: "المرض هو (السبب) للذهاب للطبيب، لذا نستخدم because." },
+                { q: "I was very tired, ____ I went to bed early.", opts: ["because", "so", "neither", "but"], ans: 1, exp: "الذهاب للنوم مبكراً هو (نتيجة) للتعب، لذا نستخدم so." },
+                { q: "A: I am hungry.<br>B: ____ am I.", opts: ["Neither", "So", "Too", "Because"], ans: 1, exp: "الجملة الأولى مثبتة (I am)، لذا نوافق باستخدام So." },
+                { q: "A: I don't like coffee.<br>B: ____ do I.", opts: ["So", "Neither", "Because", "Either"], ans: 1, exp: "الجملة الأولى منفية (don't)، لذا نوافق باستخدام Neither." },
+                { q: "The people injured ____ when they were escaping.", opts: ["themselves", "ourselves", "yourselves", "himself"], ans: 0, exp: "الفاعل The people (جمع غائب) لذا نستخدم themselves." },
+                { q: "We didn't play tennis ____ it was raining.", opts: ["so", "because", "neither", "and"], ans: 1, exp: "المطر هو (السبب)، لذا نستخدم because." },
+                { q: "A: I didn't see the accident.<br>B: ____ did I.", opts: ["So", "Neither", "Too", "Not"], ans: 1, exp: "الجملة منفية بـ (didn't)، لذا نوافق باستخدام Neither." }
+            ],
+            eval: [
+                { q: "The instructions on the box say: 'Do it ____.'", opts: ["yourself", "myself", "itself", "himself"], ans: 0, exp: "الجملة أمرية موجهة للمخاطب، لذا نستخدم yourself (بنفسك)." },
+                { q: "We were interviewed for a TV show, and we saw ____ on TV.", opts: ["ourselves", "themselves", "yourselves", "myself"], ans: 0, exp: "الفاعل We يناسبه ourselves." },
+                { q: "The road was closed, ____ we took another way.", opts: ["because", "so", "neither", "but"], ans: 1, exp: "أخذ طريق آخر هو (النتيجة لإغلاق الطريق)، لذا نستخدم so." },
+                { q: "I didn't buy the shoes ____ they were too expensive.", opts: ["so", "because", "neither", "and"], ans: 1, exp: "الغلاء هو (السبب)، لذا نستخدم because." },
+                { q: "A: I am not an aggressive driver.<br>B: ____ am I.", opts: ["So", "Neither", "Too", "Either"], ans: 1, exp: "الجملة منفية (am not)، لذا نستخدم Neither." },
+                { q: "A: I usually drive carefully.<br>B: ____ do I.", opts: ["Neither", "So", "Too", "Because"], ans: 1, exp: "الجملة مثبتة، لذا نستخدم So." },
+                { q: "The cat cleaned ____.", opts: ["himself", "herself", "itself", "myself"], ans: 2, exp: "الفاعل The cat (غير عاقل) يناسبه itself." },
+                { q: "Ahmed is a careful driver, ____ he rarely has accidents.", opts: ["because", "so", "neither", "as"], ans: 1, exp: "عدم وقوع حوادث هو (النتيجة)، لذا نستخدم so." },
+                { q: "A: I've never broken my leg.<br>B: ____ have I.", opts: ["So", "Neither", "Never", "Not"], ans: 1, exp: "الجملة منفية بوجود كلمة (never)، لذا نستخدم Neither." },
+                { q: "You and Ali must clean the room ____.", opts: ["yourself", "yourselves", "ourselves", "themselves"], ans: 1, exp: "You and Ali (أنتم - جمع مخاطب) يناسبه yourselves." },
+                { q: "She lost her keys, ____ she couldn't open the door.", opts: ["because", "so", "neither", "or"], ans: 1, exp: "عدم القدرة على الفتح هو (النتيجة)، لذا نستخدم so." },
+                { q: "A: I very seldom cut myself.<br>B: ____ do I.", opts: ["So", "Neither", "Seldom", "Not"], ans: 1, exp: "كلمة seldom (نادراً جداً) تعطي معنى النفي، لذا نستخدم Neither." }
+            ]
+        };
+
+        // ==========================================
+        // 2. حالة التطبيق (State)
+        // ==========================================
+        let appState = {
+            name: "",
+            soundEnabled: true,
+            mode: "", 
+            currentQIndex: 0,
+            score: 0,
+            currentQuestions: [],
+            evalHistory: [],
+            questionAnswered: false
+        };
+
+        // ==========================================
+        // 3. نظام الصوت الآمن (Safe Audio Generator)
+        // ==========================================
+        // استخدام نغمات Base64 بدلاً من AudioContext لتجنب مشاكل المتصفحات الآمنة (iframes)
+        // نغمة صحيحة قصيرة وهادئة
+        const soundCorrect = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"+Array(200).join("1234567890")); 
+        // نغمة خاطئة
+        const soundWrong = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"+Array(200).join("0987654321"));
+        
+        function playSafeSound(isCorrect) {
+            if (!appState.soundEnabled) return;
+            try {
+                // محاولة توليد صوت عبر Web Audio API إذا كان متاحاً ومسموحاً
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                
+                if (isCorrect) {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(600, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                } else {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(250, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.2);
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                }
+                
+                osc.start();
+                osc.stop(ctx.currentTime + 0.3);
+            } catch (e) {
+                // إذا فشل (بسبب الحماية)، نتجاهل الأمر بصمت ولا نوقف التطبيق
+                console.log("Audio skipped due to browser policy.");
+            }
+        }
+
+        // ==========================================
+        // 4. الوظائف الأساسية للتنقل
+        // ==========================================
+        function getEl(id) { return document.getElementById(id); }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            const target = getEl('screen-' + screenId);
+            if (target) {
+                target.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // ==========================================
+        // 5. تهيئة التطبيق والأحداث بعد تحميل الصفحة
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            
+            // ربط الأزرار الثابتة (طريقة آمنة لا تتطلب onclick في HTML)
+            getEl('btn-home').addEventListener('click', () => showScreen('home'));
+            getEl('btn-sound').addEventListener('click', () => {
+                appState.soundEnabled = !appState.soundEnabled;
+                getEl('sound-status').innerText = appState.soundEnabled ? "🔊 الصوت مفعّل" : "🔇 الصوت مكتوم";
+            });
+            
+            getEl('btn-start').addEventListener('click', () => {
+                const nameInput = getEl('studentName').value.trim();
+                if (nameInput.length < 2) {
+                    getEl('nameError').classList.remove('hidden');
+                    return;
+                }
+                getEl('nameError').classList.add('hidden');
+                appState.name = nameInput;
+                
+                // محاولة تفعيل الصوت باختبار صامت عند أول تفاعل
+                if (appState.soundEnabled) {
+                    try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); ctx.resume(); } catch(e){}
+                }
+                
+                showScreen('menu');
+            });
+
+            // أزرار الدروس
+            getEl('btn-lesson-0').addEventListener('click', () => renderLesson(0));
+            getEl('btn-lesson-1').addEventListener('click', () => renderLesson(1));
+            getEl('btn-lesson-2').addEventListener('click', () => renderLesson(2));
+            getEl('btn-menu-back').addEventListener('click', () => showScreen('menu'));
+
+            // أزرار الاختبارات
+            getEl('btn-prac').addEventListener('click', () => initQuiz('practice'));
+            getEl('btn-eval').addEventListener('click', () => initQuiz('eval'));
+            getEl('btn-next').addEventListener('click', nextQuestion);
+            getEl('btn-to-eval').addEventListener('click', () => initQuiz('eval'));
+            getEl('btn-finish').addEventListener('click', finishQuiz);
+            
+            // أزرار النتيجة والشهادة
+            getEl('btn-retry').addEventListener('click', () => initQuiz('eval'));
+            getEl('btn-review').addEventListener('click', () => {
+                const reviewSec = getEl('review-section');
+                reviewSec.classList.toggle('hidden');
+                if(!reviewSec.classList.contains('hidden')) {
+                    reviewSec.scrollIntoView({behavior: 'smooth'});
+                }
+            });
+            getEl('btn-cert').addEventListener('click', generateCertificate);
+            getEl('btn-hide-cert').addEventListener('click', toggleCertMode);
+            getEl('btn-back-cert').addEventListener('click', () => showScreen('result'));
+            getEl('btn-exit-cert').addEventListener('click', toggleCertMode);
+
+            // عرض الشاشة الأولى
+            showScreen('home');
+        });
+
+        // ==========================================
+        // 6. منطق الشرح (Lessons)
+        // ==========================================
+        function renderLesson(index) {
+            const data = lessonsData[index];
+            getEl('lesson-container').innerHTML = `
+                <h3 class="text-3xl md:text-4xl font-black text-navy mb-2 eng-text">${data.title}</h3>
+                <h4 class="text-xl font-bold text-gray-500 mb-8 border-b-2 border-gray-100 pb-4">${data.arTitle}</h4>
+                ${data.content}
+            `;
+            showScreen('lesson');
+        }
+
+        // ==========================================
+        // 7. منطق الاختبار (Quiz)
+        // ==========================================
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function initQuiz(mode) {
+            appState.mode = mode;
+            appState.currentQIndex = 0;
+            appState.score = 0;
+            appState.evalHistory = [];
+            appState.currentQuestions = shuffleArray(quizData[mode]);
+            
+            getEl('quiz-title').innerText = mode === 'practice' ? "التدريب التفاعلي" : "التقييم النهائي";
+            getEl('quiz-instruction').innerText = mode === 'practice' ? "اختر الإجابة الصحيحة (يمكنك المحاولة أكثر من مرة):" : "اختر الإجابة الصحيحة (محاولة واحدة فقط):";
+            
+            showScreen('quiz');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            appState.questionAnswered = false;
+            const qObj = appState.currentQuestions[appState.currentQIndex];
+            const totalQ = appState.currentQuestions.length;
+            
+            getEl('quiz-progress').innerText = `${appState.currentQIndex + 1}/${totalQ}`;
+            getEl('quiz-bar').style.width = `${((appState.currentQIndex) / totalQ) * 100}%`;
+            getEl('quiz-question').innerHTML = qObj.q;
+            
+            // تجهيز الخيارات وخلطها مع حفظ الفهرس الأصلي لمعرفة الإجابة الصحيحة
+            const optsContainer = getEl('quiz-options');
+            optsContainer.innerHTML = "";
+            let optsMapped = qObj.opts.map((text, i) => ({ text, originalIndex: i }));
+            let shuffledOpts = shuffleArray(optsMapped);
+            
+            shuffledOpts.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "btn-option w-full text-left bg-white border-2 border-gray-200 hover:border-purple p-5 rounded-2xl font-black eng-text text-xl text-navy shadow-sm";
+                btn.innerHTML = opt.text;
+                
+                // ربط الحدث برمجياً بشكل آمن
+                btn.addEventListener('click', () => handleAnswer(opt.originalIndex, qObj.ans, btn, qObj, opt.text));
+                
+                optsContainer.appendChild(btn);
+            });
+            
+            getEl('quiz-feedback').classList.add('hidden');
+            getEl('btn-next').classList.add('hidden');
+            getEl('btn-to-eval').classList.add('hidden');
+            getEl('btn-finish').classList.add('hidden');
+        }
+
+        function handleAnswer(selectedIndex, correctIndex, btnElement, qObj, selectedText) {
+            if (appState.mode === 'eval' && appState.questionAnswered) return;
+            
+            const isCorrect = selectedIndex === correctIndex;
+            const isEval = appState.mode === 'eval';
+            const allBtns = getEl('quiz-options').querySelectorAll('button');
+            
+            if (isEval) {
+                appState.questionAnswered = true;
+                appState.evalHistory.push({
+                    q: qObj.q,
+                    isCorrect: isCorrect,
+                    exp: qObj.exp,
+                    correctText: qObj.opts[correctIndex]
+                });
+                
+                // تعطيل جميع الأزرار
+                allBtns.forEach(b => {
+                    b.disabled = true;
+                    b.classList.add('opacity-60');
+                });
+            }
+
+            if (isCorrect) {
+                playSafeSound(true);
+                btnElement.classList.add('correct-btn');
+                btnElement.classList.remove('opacity-60');
+                
+                if (isEval || (!isEval && !btnElement.hasAttribute('data-failed'))) {
+                    appState.score++;
+                }
+
+                showFeedbackUI(true, isEval ? "أحسنت! إجابة صحيحة." : qObj.exp);
+                checkQuizProgress();
+
+            } else {
+                playSafeSound(false);
+                btnElement.classList.add('wrong-btn');
+                btnElement.setAttribute('data-failed', 'true');
+                
+                if (isEval) {
+                    allBtns.forEach(b => {
+                        if (b.innerHTML === qObj.opts[correctIndex]) {
+                            b.classList.remove('opacity-60', 'wrong-btn');
+                            b.classList.add('correct-btn');
+                        }
+                    });
+                    showFeedbackUI(false, qObj.exp);
+                    checkQuizProgress();
+                } else {
+                    showFeedbackUI(false, "إجابة خاطئة، جرب خياراً آخر!");
+                }
+            }
+        }
+
+        function showFeedbackUI(isCorrect, text) {
+            const fb = getEl('quiz-feedback');
+            const title = getEl('feedback-title');
+            const desc = getEl('feedback-text');
+            
+            fb.classList.remove('hidden', 'bg-green-50', 'border-green-200', 'bg-red-50', 'border-red-200');
+            
+            if (isCorrect) {
+                fb.classList.add('bg-green-50', 'border-green-200', 'text-green-900');
+                title.innerHTML = '✅ إجابة صحيحة';
+            } else {
+                fb.classList.add('bg-red-50', 'border-red-200', 'text-red-900');
+                title.innerHTML = appState.mode === 'eval' ? '❌ إجابة خاطئة' : '⚠️ تحتاج إلى مراجعة';
+            }
+            desc.innerHTML = text;
+        }
+
+        function checkQuizProgress() {
+            const total = appState.currentQuestions.length;
+            if (appState.currentQIndex < total - 1) {
+                getEl('btn-next').classList.remove('hidden');
+            } else {
+                getEl('quiz-bar').style.width = '100%';
+                if (appState.mode === 'eval') {
+                    getEl('btn-finish').classList.remove('hidden');
+                } else {
+                    getEl('btn-to-eval').classList.remove('hidden');
+                }
+            }
+        }
+
+        function nextQuestion() {
+            appState.currentQIndex++;
+            loadQuestion();
+        }
+
+        // ==========================================
+        // 8. النتيجة والشهادة
+        // ==========================================
+        function finishQuiz() {
+            showScreen('result');
+            
+            const total = appState.currentQuestions.length;
+            const percent = Math.round((appState.score / total) * 100);
+            
+            getEl('result-name').innerText = appState.name;
+            getEl('result-score').innerText = appState.score;
+            getEl('result-total').innerText = total;
+            getEl('result-percent').innerText = `${percent}%`;
+            
+            let msgBox = getEl('result-message');
+            if (percent >= 90) {
+                msgBox.innerText = "ممتاز جداً! لقد أتقنت قواعد الوحدة بشكل رائع ومميز.";
+                msgBox.className = "text-2xl font-bold mb-10 p-5 rounded-2xl border-2 bg-green-50 text-green-800 border-green-200";
+            } else if (percent >= 70) {
+                msgBox.innerText = "عمل جيد! لكن هناك مجال للتحسن، ننصحك بمراجعة أخطائك في الأسفل.";
+                msgBox.className = "text-2xl font-bold mb-10 p-5 rounded-2xl border-2 bg-yellow-50 text-yellow-800 border-yellow-200";
+            } else {
+                msgBox.innerText = "تحتاج إلى مراجعة الدروس مرة أخرى، لا تستسلم وجرب مجدداً!";
+                msgBox.className = "text-2xl font-bold mb-10 p-5 rounded-2xl border-2 bg-red-50 text-red-800 border-red-200";
+            }
+            
+            buildReviewSection();
+            prepareCertificateData(percent);
+            
+            // إخفاء قسم المراجعة افتراضياً
+            getEl('review-section').classList.add('hidden');
+        }
+
+        function buildReviewSection() {
+            const list = getEl('review-list');
+            list.innerHTML = "";
+            let hasMistakes = false;
+            
+            appState.evalHistory.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = `p-6 rounded-2xl border-2 shadow-sm ${item.isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`;
+                
+                div.innerHTML = `
+                    <p class="eng-block font-extrabold text-xl text-navy mb-4">${index + 1}. ${item.q}</p>
+                    <p class="eng-block text-lg font-bold ${item.isCorrect ? 'text-green-700' : 'text-red-700'} mb-3 bg-white p-3 rounded-xl border border-gray-100 inline-block">
+                        ${item.isCorrect ? '✓ Correct Answer:' : '❌ Correct Answer was:'} <span class="bg-gray-100 px-2 py-1 rounded text-navy">${item.correctText}</span>
+                    </p>
+                    <p class="text-base font-bold text-gray-700 border-t border-gray-200 pt-4 mt-2" dir="rtl">💡 التوضيح: ${item.exp}</p>
+                `;
+                list.appendChild(div);
+                if (!item.isCorrect) hasMistakes = true;
+            });
+            
+            if (!hasMistakes) {
+                list.innerHTML = '<p class="text-center font-black text-green-600 text-2xl py-8 bg-green-50 rounded-2xl border-2 border-green-200">🎉 جميع إجاباتك صحيحة، عمل استثنائي!</p>';
+            }
+        }
+
+        function prepareCertificateData(percent) {
+            getEl('cert-name').innerText = appState.name;
+            getEl('cert-percent').innerText = `${percent}%`;
+            
+            const today = new Date();
+            const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+            getEl('cert-date').innerText = formattedDate;
+        }
+
+        function generateCertificate() {
+            showScreen('certificate');
+        }
+
+        function toggleCertMode() {
+            document.body.classList.toggle('cert-mode');
+            const isCertMode = document.body.classList.contains('cert-mode');
+            const exitBtn = getEl('btn-exit-cert');
+            
+            if(isCertMode) {
+                exitBtn.classList.remove('hidden');
+                // رفع الشاشة لأعلى للتأكد من ظهور الشهادة بالكامل لالتقاط الشاشة
+                setTimeout(() => window.scrollTo(0, 0), 50);
+            } else {
+                exitBtn.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
